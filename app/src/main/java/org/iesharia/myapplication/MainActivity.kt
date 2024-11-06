@@ -113,6 +113,9 @@ fun MainActivity(modifier: Modifier) {
             shape = RoundedCornerShape(10.dp)
         )
         val bModifier:Modifier = Modifier.padding(20.dp)
+        // El <Pair> es para identificar cada string y agruparlo como 1 objeto
+        var peopleList by remember { mutableStateOf(listOf<Pair<String, String>>()) }
+
         Row {
             Button(
                 modifier = bModifier,
@@ -137,18 +140,24 @@ fun MainActivity(modifier: Modifier) {
             Button(
                 modifier = bModifier,
                 onClick = {
-                    lName = ""
-                    lAge = ""
+                    peopleList = emptyList()
                     val db = DBHelper(context, null)
                     val cursor = db.getName()
-                    cursor!!.moveToFirst()
-                    lName += "\n" + cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COl))
-                    lAge += "\n" + cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL))
-                    while(cursor.moveToNext()){
-                        lName += "\n" + cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COl))
-                        lAge += "\n" + cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL))
+
+                    // Recorrer el cursor y añadir cada nombre y edad a la lista de personas
+                    val tempList = mutableListOf<Pair<String, String>>()
+                    cursor?.let {
+                        if (it.moveToFirst()) {
+                            do {
+                                val name = it.getString(it.getColumnIndex(DBHelper.NAME_COl))
+                                val age = it.getString(it.getColumnIndex(DBHelper.AGE_COL))
+                                tempList.add(Pair(name, age))
+                            } while (it.moveToNext())
+                        }
+                        cursor.close()
                     }
-                    cursor.close()
+
+                    peopleList = tempList
                 }
             ) {
                 Text(text = "Mostrar")
@@ -164,15 +173,28 @@ fun MainActivity(modifier: Modifier) {
                 text = "Edad"
             )
         }
-        Row {
-            Text(
-                modifier = bModifier,
-                text = lName
-            )
-            Text(
-                modifier = bModifier,
-                text = lAge
-            )
+        Column {
+            peopleList.forEach { person ->
+                Row(
+                    modifier = Modifier.padding(10.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = person.first
+                    )
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = person.second
+                    )
+                    Button(
+                        onClick = {
+
+                        }
+                    ) {
+                        Text(text = "╳")
+                    }
+                }
+            }
         }
 
     }
