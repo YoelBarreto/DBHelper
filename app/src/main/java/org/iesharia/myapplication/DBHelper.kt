@@ -32,7 +32,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
         db.close()
     }
 
-    fun deleteName(id: Int): Boolean {
+    fun deleteUser(id: Int): Boolean {
         val db = this.writableDatabase
         val success = db.delete(TABLE_NAME, "$ID_COL=?", arrayOf(id.toString())) > 0
         db.close()

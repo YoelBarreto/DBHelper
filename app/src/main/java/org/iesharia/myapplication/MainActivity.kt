@@ -49,8 +49,8 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 Scaffold(
                     modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp)
+                        .fillMaxSize()
+                        .padding(10.dp)
                 ) { innerPadding ->
                     MainActivity (
                         modifier = Modifier
@@ -145,11 +145,11 @@ fun MainActivity(modifier: Modifier) {
                     val cursor = db.getName()
 
                     // Recorrer el cursor y añadir cada nombre y edad a la lista de personas
-                    val tempList = mutableListOf<Pair<String, String>>()
+                    val tempList = mutableListOf<Triple<Int, String, String>>()
                     cursor?.let {
-                        if (it.moveToFirst()) {
+                        if (cursor.moveToFirst()) {
                             do {
-                                val id = cursor.getInt(cursor.getColumnIndex("id"))
+                                val id = cursor.getInt(cursor.getColumnIndex(DBHelper.ID_COL))
                                 val name = cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COl))
                                 val age = cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL))
                                 tempList.add(Triple(id, name, age))
@@ -180,12 +180,12 @@ fun MainActivity(modifier: Modifier) {
                     modifier = Modifier.padding(10.dp)
                 ) {
                     Text(
-                        modifier = Modifier.weight(1f),
-                        text = person.first
+                        modifier = Modifier.padding(15.dp),
+                        text = person.second
                     )
                     Text(
-                        modifier = Modifier.weight(1f),
-                        text = person.second
+                        modifier = Modifier.padding(15.dp),
+                        text = person.third
                     )
                     Button(
                         modifier = Modifier,
@@ -198,7 +198,11 @@ fun MainActivity(modifier: Modifier) {
                     Button(
                         modifier = Modifier,
                         onClick = {
+                            val db = DBHelper(context, null)
+                            db.deleteUser(person.first)
 
+                            // Actualiza la lista
+                            peopleList = peopleList.filter { it.first != person.first }
                         }
                     ) {
                         Text(text = "╳")
@@ -206,6 +210,5 @@ fun MainActivity(modifier: Modifier) {
                 }
             }
         }
-
     }
 }
