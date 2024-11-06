@@ -39,7 +39,19 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
         return success
     }
 
-    fun getName(): Cursor? {
+    fun updateUser(id: Int, name: String, age: String): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(NAME_COl, name)
+        values.put(AGE_COL, age)
+
+        val update = db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(id.toString())) > 0
+        db.close()
+        return update
+    }
+
+
+       fun getName(): Cursor? {
         val db = this.readableDatabase
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null)
     }
