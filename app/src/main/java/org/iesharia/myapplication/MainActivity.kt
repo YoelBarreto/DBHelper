@@ -82,7 +82,7 @@ fun MainActivity(modifier: Modifier) {
             fontSize = 32.sp
         )
         Text(
-            text = "Muuuuuy simple\nNombre/Edad",
+            text = "NO Muuuuuy simple\nNombre/Edad",
             fontSize = 10.sp
 
         )
@@ -113,8 +113,8 @@ fun MainActivity(modifier: Modifier) {
             shape = RoundedCornerShape(10.dp)
         )
         val bModifier:Modifier = Modifier.padding(20.dp)
-        // El <Pair> es para identificar cada string y agruparlo como 1 objeto
-        var peopleList by remember { mutableStateOf(listOf<Pair<String, String>>()) }
+        // El <Triple> es para identificar cada string y agruparlo como 1 objeto
+        var peopleList by remember { mutableStateOf(listOf<Triple<Int, String, String>>()) }
 
         Row {
             Button(
@@ -149,10 +149,11 @@ fun MainActivity(modifier: Modifier) {
                     cursor?.let {
                         if (it.moveToFirst()) {
                             do {
-                                val name = it.getString(it.getColumnIndex(DBHelper.NAME_COl))
-                                val age = it.getString(it.getColumnIndex(DBHelper.AGE_COL))
-                                tempList.add(Pair(name, age))
-                            } while (it.moveToNext())
+                                val id = cursor.getInt(cursor.getColumnIndex("id"))
+                                val name = cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COl))
+                                val age = cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL))
+                                tempList.add(Triple(id, name, age))
+                            } while (cursor.moveToNext())
                         }
                         cursor.close()
                     }
@@ -187,6 +188,15 @@ fun MainActivity(modifier: Modifier) {
                         text = person.second
                     )
                     Button(
+                        modifier = Modifier,
+                        onClick = {
+
+                        }
+                    ) {
+                        Text(text = "✍")
+                    }
+                    Button(
+                        modifier = Modifier,
                         onClick = {
 
                         }
