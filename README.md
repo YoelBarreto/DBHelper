@@ -1,6 +1,7 @@
 # DBHelper
 
 Es una aplicación básica sobre una base de datos de usuarios listando su Nombre y Edad, dandote la libertad de eliminar cualquier elemento de la lista. [Existe el boton de editar pero hasta el momento no tiene ninguna acción].
+
 Se usa SQLite como principal base de datos en el archivo "DBHelper.kt"
 
 ## Aplicación:
