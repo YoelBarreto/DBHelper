@@ -114,7 +114,7 @@ fun MainActivity(modifier: Modifier) {
         )
         val bModifier:Modifier = Modifier.padding(20.dp)
         // El <Triple> es para identificar cada string y agruparlo como 1 objeto
-        var peopleList by remember { mutableStateOf(listOf<Triple<Int, String, String>>()) }
+        var peopleList by remember { mutableStateOf(listOf<Triple<String, String, String>>()) }
 
         Row {
             Button(
@@ -145,11 +145,11 @@ fun MainActivity(modifier: Modifier) {
                     val cursor = db.getName()
 
                     // Recorrer el cursor y añadir cada nombre y edad a la lista de personas
-                    val tempList = mutableListOf<Triple<Int, String, String>>()
+                    val tempList = mutableListOf<Triple<String, String, String>>()
                     cursor?.let {
                         if (cursor.moveToFirst()) {
                             do {
-                                val id = cursor.getInt(cursor.getColumnIndex(DBHelper.ID_COL))
+                                val id = cursor.getString(cursor.getColumnIndex(DBHelper.ID_COL))
                                 val name = cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COl))
                                 val age = cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL))
                                 tempList.add(Triple(id, name, age))
@@ -157,7 +157,6 @@ fun MainActivity(modifier: Modifier) {
                         }
                         cursor.close()
                     }
-
                     peopleList = tempList
                 }
             ) {
@@ -199,7 +198,7 @@ fun MainActivity(modifier: Modifier) {
                         modifier = Modifier,
                         onClick = {
                             val db = DBHelper(context, null)
-                            db.deleteUser(person.first)
+                            db.deleteUser(person.first.toString())
 
                             // Actualiza la lista
                             peopleList = peopleList.filter { it.first != person.first }

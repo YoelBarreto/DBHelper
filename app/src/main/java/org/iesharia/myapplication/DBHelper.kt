@@ -32,26 +32,26 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
         db.close()
     }
 
-    fun deleteUser(id: Int): Boolean {
+    fun deleteUser(id: String): Boolean {
         val db = this.writableDatabase
-        val success = db.delete(TABLE_NAME, "$ID_COL=?", arrayOf(id.toString())) > 0
+
+        val success = db.delete(TABLE_NAME, "$ID_COL=?", arrayOf(id))
         db.close()
-        return success
+        return success > 0
     }
 
-    fun updateUser(id: Int, name: String, age: String): Boolean {
+    fun updateUser(id: String, name: String, age: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(NAME_COl, name)
         values.put(AGE_COL, age)
 
-        val update = db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(id.toString())) > 0
+        val update = db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(id)) > 0
         db.close()
         return update
     }
 
-
-       fun getName(): Cursor? {
+    fun getName(): Cursor? {
         val db = this.readableDatabase
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null)
     }
